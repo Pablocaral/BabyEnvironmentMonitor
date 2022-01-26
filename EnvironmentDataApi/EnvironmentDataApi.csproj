@@ -10,7 +10,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
     <PackageReference Include="Nancy" Version="2.0.0" />
     <PackageReference Include="NodaTime" Version="3.0.9" />
-    <PackageReference Include="Sharpility" Version="1.2.2" />
     <PackageReference Include="AdysTech.InfluxDB.Client.Net.Core" Version="0.25.0" />
   </ItemGroup>
   <ItemGroup>

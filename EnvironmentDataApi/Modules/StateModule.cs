@@ -1,6 +1,5 @@
 using Com.EnvironmentDataApi.Models;
 using Nancy;
-using Sharpility.Base;
 
 namespace Com.EnvironmentDataApi.Modules
 { 
@@ -18,7 +17,13 @@ namespace Com.EnvironmentDataApi.Modules
         { 
             Get("/state/current/{environmentUid}", parameters =>
             {
-                Preconditions.IsNotNull(parameters.environmentUid, "Required parameter: 'environmentUid' is missing at 'GetCurrentState'");                
+                if(string.IsNullOrEmpty(parameters.environmentUid))
+                    return new Response()
+                    {
+                        ReasonPhrase = "Required parameter: 'environmentUid' is missing at 'GetCurrentState'",
+                        StatusCode = HttpStatusCode.BadRequest
+                    };
+
                 return service.GetCurrentState(Context, parameters.environmentUid);
             });
         }
