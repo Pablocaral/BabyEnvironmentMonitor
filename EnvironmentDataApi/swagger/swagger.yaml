@@ -1,0 +1,53 @@
+swagger: "2.0"
+info:
+  description: "This API allow you access to the baby environment data. This data are collected by sensors located near the baby's crib and obtains information about the temperature, noise, humidity, etc. You can obtain all sensor data on a specific moment, the state of the baby environment, or you can obtain the history of the seven last days of each sensor."
+  version: "1.0.0"
+  title: "Environment Data API"
+basePath: "/"
+tags:
+- name: "state"
+  description: "The current state of the baby environment"
+- name: "history"
+  description: "Historical data, composed by data from last 7 days"
+schemes:
+- "https"
+- "http"
+paths:
+  /state/current/{environmentUid}:
+    get:
+      tags:
+      - "state"
+      summary: "Get current state of a baby environment"
+      description: "Get current state of a baby environment, given its unique identifier"
+      operationId: "getCurrentState"
+      parameters:
+      - in: "path"
+        name: "environmentUid"
+        description: "The baby environment unique identifier"
+        required: true
+        type: string
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/EnvironmentState"
+        "400":
+          description: "Invalid UID supplied"
+        "404":
+          description: "Environment not found"
+ 
+definitions:
+  EnvironmentState:
+    type: "object"
+    description: The state of the baby environment, composed by the current last value obtained by each sensor.
+    properties:
+      CO2:
+        type: number
+      temperature:
+        type: number
+      light:
+        type: number
+      noise:
+        type: number
+      humidity:
+        type: number
