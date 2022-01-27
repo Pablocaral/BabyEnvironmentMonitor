@@ -12,7 +12,7 @@ namespace Com.EnvironmentDataApi.NancyModules
         /// Sets up HTTP methods mappings.
         /// </summary>
         /// <param name="service">Service handling requests</param>
-        public HistoryModule(HistoryService service) : base("/")
+        public HistoryModule(IHistoryService service) : base("/")
         { 
             Get("/history/co2/{environmentUid}", parameters =>
             {
@@ -25,7 +25,17 @@ namespace Com.EnvironmentDataApi.NancyModules
                     };
                 }
 
-                return service.GetCo2History(Context, parameters.environmentUid);
+                var result = service.GetCo2History(Context, parameters.environmentUid);
+                if(result == null)
+                {
+                    return new Response()
+                    {
+                        ReasonPhrase = "Internal server error",
+                        StatusCode = HttpStatusCode.InternalServerError
+                    };
+                }
+
+                return result;
             });
 
             Get("/history/humidity/{environmentUid}", parameters =>
@@ -39,7 +49,17 @@ namespace Com.EnvironmentDataApi.NancyModules
                     };
                 }
 
-                return service.GetHumidityHistory(Context, parameters.environmentUid);
+                var result = service.GetHumidityHistory(Context, parameters.environmentUid);
+                if(result == null)
+                {
+                    return new Response()
+                    {
+                        ReasonPhrase = "Internal server error",
+                        StatusCode = HttpStatusCode.InternalServerError
+                    };
+                }
+
+                return result;
             });
 
             Get("/history/light/{environmentUid}", parameters =>
@@ -53,7 +73,17 @@ namespace Com.EnvironmentDataApi.NancyModules
                     };
                 }
 
-                return service.GetLightHistory(Context, parameters.environmentUid);
+                var result = service.GetLightHistory(Context, parameters.environmentUid);
+                if(result == null)
+                {
+                    return new Response()
+                    {
+                        ReasonPhrase = "Internal server error",
+                        StatusCode = HttpStatusCode.InternalServerError
+                    };
+                }
+
+                return result;
             });
 
             Get("/history/noise/{environmentUid}", parameters =>
@@ -67,7 +97,17 @@ namespace Com.EnvironmentDataApi.NancyModules
                     };
                 }
 
-                return service.GetNoiseHistory(Context, parameters.environmentUid);
+                var result = service.GetNoiseHistory(Context, parameters.environmentUid);
+                if(result == null)
+                {
+                    return new Response()
+                    {
+                        ReasonPhrase = "Internal server error",
+                        StatusCode = HttpStatusCode.InternalServerError
+                    };
+                }
+
+                return result;
             });
 
             Get("/history/temperature/{environmentUid}", parameters =>
@@ -81,7 +121,17 @@ namespace Com.EnvironmentDataApi.NancyModules
                     };
                 }
 
-                return service.GetTemperatureHistory(Context, parameters.environmentUid);
+                var result = service.GetTemperatureHistory(Context, parameters.environmentUid);
+                if(result == null)
+                {
+                    return new Response()
+                    {
+                        ReasonPhrase = "Internal server error",
+                        StatusCode = HttpStatusCode.InternalServerError
+                    };
+                }
+
+                return result;
             });
         }
     }
@@ -89,7 +139,7 @@ namespace Com.EnvironmentDataApi.NancyModules
     /// <summary>
     /// Service handling History requests.
     /// </summary>
-    public interface HistoryService
+    public interface IHistoryService
     {
         /// <summary>
         /// Get the CO2 history data of a baby environment, given its unique identifier

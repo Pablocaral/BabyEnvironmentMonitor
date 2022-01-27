@@ -11,7 +11,8 @@ namespace Com.EnvironmentDataApi
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(typeof(IStateService), typeof(StateService)); 
+            services.AddSingleton(typeof(IStateService), typeof(StateService));
+            services.AddSingleton(typeof(IHistoryService), typeof(HistoryService));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
