@@ -3,6 +3,7 @@ using Com.EnvironmentDataApi.NancyModules;
 using Com.EnvironmentDataApi.NancyModels;
 using log4net;
 using Nancy;
+using System;
 
 namespace Com.EnvironmentDataApi.Services
 {
@@ -12,15 +13,23 @@ namespace Com.EnvironmentDataApi.Services
         
         public EnvironmentState GetCurrentState(NancyContext context, string environmentUid)
         {
-            log.Info("Processing Get Current State operation.");
-            return new EnvironmentState()
+            try
             {
-                CO2 = 1,
-                Humidity = 1,
-                Light = 1,
-                Noise = 1,
-                Temperature = 1
-            };
+                // ToDo
+                return new EnvironmentState()
+                {
+                    CO2 = 1,
+                    Humidity = 1,
+                    Light = 1,
+                    Noise = 1,
+                    Temperature = 1
+                };
+            }
+            catch(Exception ex)
+            {
+                log.Error("An error ocurred on GetCo2History operation", ex);
+                return null;
+            }
         }
     }
 }

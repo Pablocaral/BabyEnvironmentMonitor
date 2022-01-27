@@ -26,7 +26,17 @@ namespace Com.EnvironmentDataApi.NancyModules
                     };
                 }
                 
-                return service.GetCurrentState(Context, parameters.environmentUid);
+                var result = service.GetCurrentState(Context, parameters.environmentUid);
+                if(result == null)
+                {
+                    return new Response()
+                    {
+                        ReasonPhrase = "Internal server error",
+                        StatusCode = HttpStatusCode.InternalServerError
+                    };
+                }
+
+                return result;
             });
         }
     }
