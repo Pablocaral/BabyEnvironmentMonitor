@@ -25,7 +25,7 @@ paths:
         name: "environmentUid"
         description: "The baby environment unique identifier"
         required: true
-        type: string
+        type: "string"
       responses:
         "200":
           description: "Successful operation"
@@ -35,11 +35,122 @@ paths:
           description: "Invalid UID supplied"
         "404":
           description: "Environment not found"
+          
+  /history/co2/{environmentUid}:
+    get:
+      tags:
+      - "history"
+      summary: "Get the CO2 history data of a baby environment"
+      description: "Get the CO2 history data of a baby environment, given its unique identifier"
+      operationId: "getCo2History"
+      parameters:
+      - in: "path"
+        name: "environmentUid"
+        description: "The baby environment unique identifier"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Co2History"
+        "400":
+          description: "Invalid UID supplied"
+        "404":
+          description: "Environment not found"
+  /history/humidity/{environmentUid}:
+    get:
+      tags:
+      - "history"
+      summary: "Get the humidity history data of a baby environment"
+      description: "Get the humidity history data of a baby environment, given its unique identifier"
+      operationId: "getHumidityHistory"
+      parameters:
+      - in: "path"
+        name: "environmentUid"
+        description: "The baby environment unique identifier"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/HumidityHistory"
+        "400":
+          description: "Invalid UID supplied"
+        "404":
+          description: "Environment not found"
+  /history/light/{environmentUid}:
+    get:
+      tags:
+      - "history"
+      summary: "Get the light history data of a baby environment"
+      description: "Get the light history data of a baby environment, given its unique identifier"
+      operationId: "getLightHistory"
+      parameters:
+      - in: "path"
+        name: "environmentUid"
+        description: "The baby environment unique identifier"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/LightHistory"
+        "400":
+          description: "Invalid UID supplied"
+        "404":
+          description: "Environment not found"
+  /history/noise/{environmentUid}:
+    get:
+      tags:
+      - "history"
+      summary: "Get the noise history data of a baby environment"
+      description: "Get the noise history data of a baby environment, given its unique identifier"
+      operationId: "getNoiseHistory"
+      parameters:
+      - in: "path"
+        name: "environmentUid"
+        description: "The baby environment unique identifier"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/NoiseHistory"
+        "400":
+          description: "Invalid UID supplied"
+        "404":
+          description: "Environment not found"
+  /history/temperature/{environmentUid}:
+    get:
+      tags:
+      - "history"
+      summary: "Get the temperature history data of a baby environment"
+      description: "Get the temperature history data of a baby environment, given its unique identifier"
+      operationId: "getTemperatureHistory"
+      parameters:
+      - in: "path"
+        name: "environmentUid"
+        description: "The baby environment unique identifier"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/TemperatureHistory"
+        "400":
+          description: "Invalid UID supplied"
+        "404":
+          description: "Environment not found"
  
 definitions:
   EnvironmentState:
     type: "object"
-    description: The state of the baby environment, composed by the current last value obtained by each sensor.
+    description: The state of the baby environment, compose by the current last value obtained by each sensor.
     properties:
       CO2:
         type: number
@@ -51,3 +162,94 @@ definitions:
         type: number
       humidity:
         type: number
+        
+  Co2History:
+    type: object
+    description: "The history, compose by the last 7 days, of the CO2 detected on the baby environment. Time period could be less than this one if no previous data has registered on the system."
+    properties:
+      period:
+        $ref: "#/definitions/Period"
+      timeInterval:
+        type: integer
+        format: int32
+        description: "Elapsed time interval between each history item"
+      historyData:
+        type: "array"
+        items:
+          type: "integer"
+          format: "int32"
+          description: "Ordered data of the period"
+  HumidityHistory:
+    type: object
+    description: "The history, compose by the last 7 days, of the humidity detected on the baby environment. Time period could be less than this one if no previous data has registered on the system."
+    properties:
+      period:
+        $ref: "#/definitions/Period"
+      timeInterval:
+        type: "integer"
+        format: "int32"
+        description: "Elapsed time interval between each history item"
+      historyData:
+        type: "array"
+        items:
+          type: "number"
+          description: "Ordered data of the period"
+  LightHistory:
+    type: object
+    description: "The history, compose by the last 7 days, of the light detected on the baby environment. Time period could be less than this one if no previous data has registered on the system."
+    properties:
+      period:
+        $ref: "#/definitions/Period"
+      timeInterval:
+        type: "integer"
+        format: "int32"
+        description: "Elapsed time interval between each history item"
+      historyData:
+        type: "array"
+        items:
+          type: "integer"
+          format: "int32"
+          description: "Ordered data of the period"
+  NoiseHistory:
+    type: object
+    description: "The history, compose by the last 7 days, of the noise detected on the baby environment. Time period could be less than this one if no previous data has registered on the system."
+    properties:
+      period:
+        $ref: "#/definitions/Period"
+      timeInterval:
+        type: "integer"
+        format: "int32"
+        description: "Elapsed time interval between each history item"
+      historyData:
+        type: "array"
+        items:
+          type: "integer"
+          format: "int32"
+          description: "Ordered data of the period"
+  TemperatureHistory:
+    type: object
+    description: "The history, compose by the last 7 days, of the temperature detected on the baby environment. Time period could be less than this one if no previous data has registered on the system."
+    properties:
+      period:
+        $ref: "#/definitions/Period"
+      timeInterval:
+        type: "integer"
+        format: "int32"
+        description: "Elapsed time interval between each history item"
+      historyData:
+        type: "array"
+        items:
+          type: "number"
+          description: "Ordered data of the period"
+  
+  Period:
+    type: object
+    properties:
+      StartPeriod:
+        type: "string"
+        format: "date-time"
+        description: "Date and time when the period start"
+      EndPeriod:
+        type: "string"
+        format: "date-time"
+        description: "Date and time when the period finish"

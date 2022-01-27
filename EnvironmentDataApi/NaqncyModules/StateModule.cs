@@ -18,12 +18,14 @@ namespace Com.EnvironmentDataApi.NancyModules
             Get("/state/current/{environmentUid}", parameters =>
             {
                 if(string.IsNullOrEmpty(parameters.environmentUid))
+                {
                     return new Response()
                     {
                         ReasonPhrase = "Required parameter: 'environmentUid' is missing at 'GetCurrentState'",
                         StatusCode = HttpStatusCode.BadRequest
                     };
-
+                }
+                
                 return service.GetCurrentState(Context, parameters.environmentUid);
             });
         }
