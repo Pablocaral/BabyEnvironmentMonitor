@@ -1,4 +1,4 @@
-using Com.EnvironmentDataApi.Modules;
+using Com.EnvironmentDataApi.NancyModules;
 using Com.EnvironmentDataApi.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

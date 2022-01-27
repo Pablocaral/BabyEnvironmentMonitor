@@ -1,7 +1,7 @@
-using Com.EnvironmentDataApi.Models;
+using Com.EnvironmentDataApi.NancyModels;
 using Nancy;
 
-namespace Com.EnvironmentDataApi.Modules
+namespace Com.EnvironmentDataApi.NancyModules
 { 
 
     /// <summary>

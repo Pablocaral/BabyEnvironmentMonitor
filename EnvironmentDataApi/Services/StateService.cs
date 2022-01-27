@@ -1,6 +1,6 @@
 using System.Reflection;
-using Com.EnvironmentDataApi.Modules;
-using Com.EnvironmentDataApi.Models;
+using Com.EnvironmentDataApi.NancyModules;
+using Com.EnvironmentDataApi.NancyModels;
 using log4net;
 using Nancy;
 

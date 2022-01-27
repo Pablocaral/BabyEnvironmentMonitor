@@ -1,4 +1,4 @@
-namespace Com.EnvironmentDataApi.Models
+namespace Com.EnvironmentDataApi.NancyModels
 {
     /// <summary>
     /// The state of the baby environment, composed by the current last value obtained by each sensor.

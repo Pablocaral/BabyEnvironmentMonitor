@@ -1,6 +1,6 @@
 using Nancy;
 
-namespace Com.EnvironmentDataApi.Modules
+namespace Com.EnvironmentDataApi.NancyModules
 {
     public sealed class SwaggerModule : NancyModule
     {
