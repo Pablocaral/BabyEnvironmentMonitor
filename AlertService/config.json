@@ -1,0 +1,18 @@
+{
+    "InlfuxDB": {
+        "Endpoint": "http://localhost:8086",
+        "User": "admin",
+        "Password": "admin"
+    },
+    "ThresholdValues": {
+        "HighAlerts": {
+            "UpperLimit": 80,
+            "LowerLimit": 20
+        },
+        "MediumAlerts": {
+            "UpperLimit": 60,
+            "LowerLimit": 40
+        }
+    },
+    "AlertersDelayMs": 2000
+}
