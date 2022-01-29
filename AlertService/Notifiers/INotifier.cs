@@ -4,6 +4,6 @@ namespace Com.AlertService.Notifiers
 {
     public interface INotifier
     {
-        void Notify(double value, string sensorType, AlertType alertType);
+        void Notify(float value, string sensorType, AlertType alertType);
     }
 }

@@ -2,16 +2,47 @@
     "InlfuxDB": {
         "Endpoint": "http://localhost:8086",
         "User": "admin",
-        "Password": "admin"
+        "Password": "admin",
+        "Measurement": "environmentData"
     },
     "ThresholdValues": {
         "HighAlerts": {
-            "UpperLimit": 80,
-            "LowerLimit": 20
+            "Co2": {
+                "UpperLimit": 10
+            },
+            "Light": {
+                "UpperLimit": 20
+            },
+            "Humidity": {
+                "UpperLimit": 90,
+                "LowerLimit": 30
+            },
+            "Temperatre": {
+                "UpperLimit": 35,
+                "LowerLimit": 10
+            },
+            "Noise": {
+                "UpperLimit": 20
+            }
         },
         "MediumAlerts": {
-            "UpperLimit": 60,
-            "LowerLimit": 40
+            "Co2": {
+                "UpperLimit": 5
+            },
+            "Light": {
+                "UpperLimit": 10
+            },
+            "Humidity": {
+                "UpperLimit": 70,
+                "LowerLimit": 60
+            },
+            "Temperatre": {
+                "UpperLimit": 22,
+                "LowerLimit": 18
+            },
+            "Noise": {
+                "UpperLimit": 12
+            }
         }
     },
     "AlertersDelayMs": 2000
