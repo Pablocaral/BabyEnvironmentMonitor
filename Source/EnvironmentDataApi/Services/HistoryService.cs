@@ -35,8 +35,13 @@ namespace Com.EnvironmentDataApi.Services
 
                 var period = new Com.EnvironmentDataApi.NancyModels.Period(startPeriod,endPeriod);
                 List<float?> elements = GetHistory(startPeriod,endPeriod,"co2",environmentUid).GetAwaiter().GetResult();
-                
-                return new Co2History (period,3600,elements);
+
+                Co2History sendRequest = null;
+                if( elements.Count > 0) {
+                    sendRequest = new Co2History (period,3600,elements);
+                } 
+
+                return sendRequest;
             }
             catch(Exception ex)
             {
@@ -55,7 +60,12 @@ namespace Com.EnvironmentDataApi.Services
                 var period = new Com.EnvironmentDataApi.NancyModels.Period(startPeriod,endPeriod);
                 List<float?> elements = GetHistory(startPeriod,endPeriod,"humidity",environmentUid).GetAwaiter().GetResult();
                 
-                return new HumidityHistory (period,3600,elements);
+                HumidityHistory sendRequest = null;
+                if( elements.Count > 0) {
+                    sendRequest = new HumidityHistory (period,3600,elements);
+                } 
+
+                return sendRequest;
             }
             catch(Exception ex)
             {
@@ -74,7 +84,12 @@ namespace Com.EnvironmentDataApi.Services
                 var period = new Com.EnvironmentDataApi.NancyModels.Period(startPeriod,endPeriod);
                 List<float?> elements = GetHistory(startPeriod,endPeriod,"light",environmentUid).GetAwaiter().GetResult();
                 
-                return new LightHistory (period,3600,elements);
+                LightHistory sendRequest = null;
+                if( elements.Count > 0) {
+                    sendRequest = new LightHistory (period,3600,elements);
+                } 
+
+                return sendRequest;
             }
             catch(Exception ex)
             {
@@ -93,7 +108,12 @@ namespace Com.EnvironmentDataApi.Services
                 var period = new Com.EnvironmentDataApi.NancyModels.Period(startPeriod,endPeriod);
                 List<float?> elements = GetHistory(startPeriod,endPeriod,"noise",environmentUid).GetAwaiter().GetResult();
                 
-                return new NoiseHistory (period,3600,elements);
+                NoiseHistory sendRequest = null;
+                if( elements.Count > 0) {
+                    sendRequest = new NoiseHistory (period,3600,elements);
+                } 
+
+                return sendRequest;
             }
             catch(Exception ex)
             {
@@ -112,7 +132,12 @@ namespace Com.EnvironmentDataApi.Services
                 var period = new Com.EnvironmentDataApi.NancyModels.Period(startPeriod,endPeriod);
                 List<float?> elements = GetHistory(startPeriod,endPeriod,"temperature",environmentUid).GetAwaiter().GetResult();
                 
-                return new TemperatureHistory (period,3600,elements);
+                TemperatureHistory sendRequest = null;
+                if( elements.Count > 0) {
+                    sendRequest = new TemperatureHistory (period,3600,elements);
+                } 
+
+                return sendRequest;
             }
             catch(Exception ex)
             {

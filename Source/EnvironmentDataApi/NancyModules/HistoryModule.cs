@@ -31,7 +31,7 @@ namespace Com.EnvironmentDataApi.NancyModules
                     return new Response()
                     {
                         ReasonPhrase = "Internal server error",
-                        StatusCode = HttpStatusCode.InternalServerError
+                        StatusCode = HttpStatusCode.NotFound
                     };
                 }
 
@@ -55,7 +55,7 @@ namespace Com.EnvironmentDataApi.NancyModules
                     return new Response()
                     {
                         ReasonPhrase = "Internal server error",
-                        StatusCode = HttpStatusCode.InternalServerError
+                        StatusCode = HttpStatusCode.NotFound
                     };
                 }
 
@@ -79,7 +79,7 @@ namespace Com.EnvironmentDataApi.NancyModules
                     return new Response()
                     {
                         ReasonPhrase = "Internal server error",
-                        StatusCode = HttpStatusCode.InternalServerError
+                        StatusCode = HttpStatusCode.NotFound
                     };
                 }
 
@@ -103,7 +103,7 @@ namespace Com.EnvironmentDataApi.NancyModules
                     return new Response()
                     {
                         ReasonPhrase = "Internal server error",
-                        StatusCode = HttpStatusCode.InternalServerError
+                        StatusCode = HttpStatusCode.NotFound
                     };
                 }
 
@@ -127,7 +127,7 @@ namespace Com.EnvironmentDataApi.NancyModules
                     return new Response()
                     {
                         ReasonPhrase = "Internal server error",
-                        StatusCode = HttpStatusCode.InternalServerError
+                        StatusCode = HttpStatusCode.NotFound
                     };
                 }
 
