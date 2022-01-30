@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Collections.Generic;
 using System;
 using System.Reflection;
@@ -9,12 +8,33 @@ using Nancy;
 using AdysTech.InfluxDB.Client.Net;
 using System.Threading.Tasks;
 using System.Globalization;
+using Microsoft.Extensions.Configuration;
 
 namespace Com.EnvironmentDataApi.Services
 {
     public class HistoryService : IHistoryService
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        
+        public IConfiguration configuration {get; set;}
+
+        private InfluxDBClient _client;
+        private InfluxDBClient Client
+        {
+            get
+            {
+                if(_client == null)
+                {
+                    var endPoint = configuration.GetValue<string>("InlfuxDB:Endpoint");
+                    var user = configuration.GetValue<string>("InlfuxDB:User");
+                    var password = configuration.GetValue<string>("InlfuxDB:Password");
+                    
+                    _client = new InfluxDBClient(endPoint, user, password);
+                }
+
+                return _client;
+            }   
+        }
         
         public Co2History GetCo2History(NancyContext context, string environmentUid)
         {
@@ -113,14 +133,12 @@ namespace Com.EnvironmentDataApi.Services
 
         public async Task<List<float?>> GetHistory(DateTime startPeriod,DateTime endPeriod, String variable, String environmentUid)
         {
-            InfluxDBClient client = new InfluxDBClient("http://localhost:8086", "admin", "admin");
-
             string formatEndPeriod = endPeriod.ToString("yyyy-MM-ddTHH:mm:ssZ");
             string formatStartPeriod = startPeriod.ToString("yyyy-MM-ddTHH:mm:ssZ");
             
             
             String petition = "select mean("+variable+") from environmentData where environmentId="+environmentUid+" and time>='"+formatStartPeriod+"' and time<='"+formatEndPeriod+"' group by time(1h)";
-            var query = await client.QueryMultiSeriesAsync("environmentData", petition);
+            var query = await Client.QueryMultiSeriesAsync("environmentData", petition);
 
             List<float?> hours = new List<float?>();
             foreach(var s in query){

@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Xml;
 using log4net;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
 namespace Com.EnvironmentDataApi
@@ -26,13 +27,25 @@ namespace Com.EnvironmentDataApi
                     typeof(log4net.Repository.Hierarchy.Hierarchy));
             log4net.Config.XmlConfigurator.Configure(repo, log4netConfig["log4net"]);
         }
-        private static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
+        private static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseContentRoot(Directory.GetCurrentDirectory())
                         .UseKestrel(o => o.AllowSynchronousIO = true)
-                        .UseStartup<Startup>();
+                        .UseStartup<Startup>()
+                        .UseConfiguration(LoadConfigutation(args));
                 });
+        }
+            
+        private static IConfiguration LoadConfigutation(string[] args)
+        {
+            var configurationBuilder = new ConfigurationBuilder();
+            configurationBuilder.AddJsonFile("config.json", optional: true, reloadOnChange: true);
+            configurationBuilder.AddEnvironmentVariables();
+            configurationBuilder.AddCommandLine(args);
+            return configurationBuilder.Build();
+        }
     }
 }
