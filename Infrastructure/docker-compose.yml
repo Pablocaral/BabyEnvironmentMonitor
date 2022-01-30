@@ -1,20 +1,18 @@
 version: "3"
 
 services:
-  nodeInfluxdb:
+  Influxdb:
     image: influxdb:1.8
     container_name: influxdb
     restart: always
     networks:
       - mybridge
-    ports:
-      - "8086:8086"
     
-  nodeBroker:
+  Mosquitto:
     image: eclipse-mosquitto:latest
-    container_name: broker
+    container_name: mosquitto
     depends_on:
-      - "nodeInfluxdb"
+      - "Influxdb"
     volumes:
       - ./Mosquitto/broker.conf:/mosquitto/config/mosquitto.conf
     networks:
@@ -22,17 +20,39 @@ services:
     ports:
       - "2883:1883"
     
-  nodeTelegraf:
+  Telegraf:
     image: telegraf:latest
     container_name: telegraf
     depends_on:
-      - "nodeBroker"
+      - "Mosquitto"
     volumes:
       - ./Telegraf/telegraf.conf:/etc/telegraf/telegraf.conf
     networks:
       - mybridge
 
-  nodeGrafana:
+  EnvironmentDataApi:
+    image: environment_data_api:latest
+    container_name: environment_data_api
+    depends_on:
+      - "Influxdb"
+    environment:
+      - InlfuxDB__Endpoint=http://influxdb:8086
+    ports:
+      - "5000:80"
+    networks:
+      - mybridge
+
+  AlertService:
+    image: alert_service:latest
+    container_name: alert_service
+    depends_on:
+      - "Influxdb"
+    environment:
+      - InlfuxDB__Endpoint=http://influxdb:8086
+    networks:
+      - mybridge
+
+  Grafana:
     image: grafana/grafana:latest
     container_name: grafana
     volumes:
