@@ -20,7 +20,7 @@ namespace Com.EnvironmentDataApi.NancyModels
         public Period()
         {
         }
-        private Period(DateTimeOffset? StartPeriod, DateTimeOffset? EndPeriod)
+        public Period(DateTimeOffset? StartPeriod, DateTimeOffset? EndPeriod)
         {
             this.StartPeriod = StartPeriod;   
             this.EndPeriod = EndPeriod;

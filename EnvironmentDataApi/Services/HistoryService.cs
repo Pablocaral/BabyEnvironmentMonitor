@@ -1,9 +1,14 @@
+using System.Linq;
+using System.Collections.Generic;
 using System;
 using System.Reflection;
 using Com.EnvironmentDataApi.NancyModels;
 using Com.EnvironmentDataApi.NancyModules;
 using log4net;
 using Nancy;
+using AdysTech.InfluxDB.Client.Net;
+using System.Threading.Tasks;
+using System.Globalization;
 
 namespace Com.EnvironmentDataApi.Services
 {
@@ -15,8 +20,13 @@ namespace Com.EnvironmentDataApi.Services
         {
             try
             {
-                // ToDo
-                throw new System.NotImplementedException();
+                DateTime startPeriod = DateTime.Now.AddDays(-7);
+                DateTime endPeriod = DateTime.Now;
+
+                var period = new Com.EnvironmentDataApi.NancyModels.Period(startPeriod,endPeriod);
+                List<float?> elements = GetHistory(startPeriod,endPeriod,"co2",environmentUid).GetAwaiter().GetResult();
+                
+                return new Co2History (period,3600,elements);
             }
             catch(Exception ex)
             {
@@ -29,8 +39,13 @@ namespace Com.EnvironmentDataApi.Services
         {
             try
             {
-                // ToDo
-                throw new System.NotImplementedException();
+                DateTime startPeriod = DateTime.Now.AddDays(-7);
+                DateTime endPeriod = DateTime.Now;
+
+                var period = new Com.EnvironmentDataApi.NancyModels.Period(startPeriod,endPeriod);
+                List<float?> elements = GetHistory(startPeriod,endPeriod,"humidity",environmentUid).GetAwaiter().GetResult();
+                
+                return new HumidityHistory (period,3600,elements);
             }
             catch(Exception ex)
             {
@@ -43,8 +58,13 @@ namespace Com.EnvironmentDataApi.Services
         {
             try
             {
-                // ToDo
-                throw new System.NotImplementedException();
+                DateTime startPeriod = DateTime.Now.AddDays(-7);
+                DateTime endPeriod = DateTime.Now;
+
+                var period = new Com.EnvironmentDataApi.NancyModels.Period(startPeriod,endPeriod);
+                List<float?> elements = GetHistory(startPeriod,endPeriod,"light",environmentUid).GetAwaiter().GetResult();
+                
+                return new LightHistory (period,3600,elements);
             }
             catch(Exception ex)
             {
@@ -57,8 +77,13 @@ namespace Com.EnvironmentDataApi.Services
         {
             try
             {
-                // ToDo
-                throw new System.NotImplementedException();
+                DateTime startPeriod = DateTime.Now.AddDays(-7);
+                DateTime endPeriod = DateTime.Now;
+
+                var period = new Com.EnvironmentDataApi.NancyModels.Period(startPeriod,endPeriod);
+                List<float?> elements = GetHistory(startPeriod,endPeriod,"noise",environmentUid).GetAwaiter().GetResult();
+                
+                return new NoiseHistory (period,3600,elements);
             }
             catch(Exception ex)
             {
@@ -71,14 +96,46 @@ namespace Com.EnvironmentDataApi.Services
         {
             try
             {
-                // ToDo
-                throw new System.NotImplementedException();
+                DateTime startPeriod = DateTime.Now.AddDays(-7);
+                DateTime endPeriod = DateTime.Now;
+
+                var period = new Com.EnvironmentDataApi.NancyModels.Period(startPeriod,endPeriod);
+                List<float?> elements = GetHistory(startPeriod,endPeriod,"temperature",environmentUid).GetAwaiter().GetResult();
+                
+                return new TemperatureHistory (period,3600,elements);
             }
             catch(Exception ex)
             {
                 log.Error("An error ocurred on GetTemperatureHistory operation", ex);
                 return null;
             }
+        }
+
+        public async Task<List<float?>> GetHistory(DateTime startPeriod,DateTime endPeriod, String variable, String environmentUid)
+        {
+            InfluxDBClient client = new InfluxDBClient("http://localhost:8086", "admin", "admin");
+
+            string formatEndPeriod = endPeriod.ToString("yyyy-MM-ddTHH:mm:ssZ");
+            string formatStartPeriod = startPeriod.ToString("yyyy-MM-ddTHH:mm:ssZ");
+            
+            
+            String petition = "select mean("+variable+") from environmentData where environmentId="+environmentUid+" and time>='"+formatStartPeriod+"' and time<='"+formatEndPeriod+"' group by time(1h)";
+            var query = await client.QueryMultiSeriesAsync("environmentData", petition);
+
+            List<float?> hours = new List<float?>();
+            foreach(var s in query){
+                foreach(var entrie in s.Entries){
+                    log.Debug(entrie);
+                    log.Debug(entrie.Mean);
+                    if(entrie.Mean == null){
+                        hours.Add(0);
+                    }else{
+                        hours.Add(float.Parse(entrie.Mean,CultureInfo.InvariantCulture.NumberFormat));
+                    }
+                }
+            }
+            
+            return hours;
         }
     }
 }

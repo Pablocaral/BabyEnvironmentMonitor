@@ -21,12 +21,12 @@ namespace Com.EnvironmentDataApi.NancyModels
         /// <summary>
         /// HistoryData
         /// </summary>
-        public List<int?> HistoryData { get; private set; }
+        public List<float?> HistoryData { get; private set; }
 
         public Co2History()
         {
         }
-        private Co2History(Period Period, int? TimeInterval, List<int?> HistoryData)
+        public Co2History(Period Period, int? TimeInterval, List<float?> HistoryData)
         {
             this.Period = Period;   
             this.TimeInterval = TimeInterval;
