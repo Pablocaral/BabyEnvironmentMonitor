@@ -3,6 +3,7 @@
         "Endpoint": "http://localhost:8086",
         "User": "admin",
         "Password": "admin",
+        "DatabaseName": "environmentData",
         "Measurement": "environmentData"
     },
     "ThresholdValues": {

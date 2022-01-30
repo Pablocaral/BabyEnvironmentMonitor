@@ -7,7 +7,9 @@ namespace Com.AlertService.Repositories
     public class InfluxDbRepository
     {
         private readonly InfluxDBClient client;
-        private readonly string Measurement;
+        
+        private string DatabaseName {get; set;}
+        private string Measurement {get; set;}
         
         public InfluxDbRepository(IConfiguration configuration)
         {
@@ -18,11 +20,12 @@ namespace Com.AlertService.Repositories
             client = new InfluxDBClient(endPoint, user, password);
             
             Measurement = configuration.GetValue<string>("InlfuxDB:Measurement");
+            DatabaseName = configuration.GetValue<string>("InlfuxDB:DatabaseName");
         }
 
         public EnvironmentDataModel GetLastEnvironmentState()
         {
-            var task = client.QueryMultiSeriesAsync("baby_environment", $"SELECT LAST(*) FROM {Measurement}");
+            var task = client.QueryMultiSeriesAsync(DatabaseName, $"SELECT LAST(*) FROM {Measurement}");
             task.Wait();
             var item = task.Result.FirstOrDefault();
             
