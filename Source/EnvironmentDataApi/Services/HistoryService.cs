@@ -15,25 +15,15 @@ namespace Com.EnvironmentDataApi.Services
     public class HistoryService : IHistoryService
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        
-        public IConfiguration configuration {get; set;}
+        private InfluxDBClient client;
 
-        private InfluxDBClient _client;
-        private InfluxDBClient Client
+        public HistoryService(IConfiguration configuration)
         {
-            get
-            {
-                if(_client == null)
-                {
-                    var endPoint = configuration.GetValue<string>("InlfuxDB:Endpoint");
-                    var user = configuration.GetValue<string>("InlfuxDB:User");
-                    var password = configuration.GetValue<string>("InlfuxDB:Password");
-                    
-                    _client = new InfluxDBClient(endPoint, user, password);
-                }
+            var endPoint = configuration.GetValue<string>("InlfuxDB:Endpoint");
+            var user = configuration.GetValue<string>("InlfuxDB:User");
+            var password = configuration.GetValue<string>("InlfuxDB:Password");
 
-                return _client;
-            }   
+            client = new InfluxDBClient(endPoint, user, password);
         }
         
         public Co2History GetCo2History(NancyContext context, string environmentUid)
@@ -138,7 +128,7 @@ namespace Com.EnvironmentDataApi.Services
             
             
             String petition = "select mean("+variable+") from environmentData where environmentId="+environmentUid+" and time>='"+formatStartPeriod+"' and time<='"+formatEndPeriod+"' group by time(1h)";
-            var query = await Client.QueryMultiSeriesAsync("environmentData", petition);
+            var query = await client.QueryMultiSeriesAsync("environmentData", petition);
 
             List<float?> hours = new List<float?>();
             foreach(var s in query){

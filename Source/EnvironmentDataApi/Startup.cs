@@ -19,18 +19,16 @@ namespace Com.EnvironmentDataApi
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var stateService = new StateService();
-            stateService.configuration = configuration;
-            services.AddSingleton<IStateService>(stateService);
-
-            var historyService = new HistoryService();
-            historyService.configuration = configuration;
-            services.AddSingleton<IHistoryService>(historyService);
+            services.AddSingleton<IStateService, StateService>();
+            services.AddSingleton<IHistoryService, HistoryService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseOwin(x => x.UseNancy());
+            app.UseOwin(x => x.UseNancy(new NancyOptions
+                {
+                    Bootstrapper = new Bootstrapper(configuration)
+                }));
         }
     }
 }
