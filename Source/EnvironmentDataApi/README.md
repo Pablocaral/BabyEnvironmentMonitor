@@ -1,4 +1,4 @@
-#Environment Data API
+# Environment Data API
 This REST API provides access to the baby environment data, given its environment identifier, which had been obtained by the IoT node.
 
 The API only implements GET operations, divided on two main classes:
