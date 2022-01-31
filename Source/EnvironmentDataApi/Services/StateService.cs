@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Com.EnvironmentDataApi.NancyModules;
@@ -71,7 +72,7 @@ namespace Com.EnvironmentDataApi.Services
             var registry = task.Result.FirstOrDefault();
             if(registry != default  && registry.HasEntries)
             {
-                return decimal.Parse(registry.Entries.First().Last);
+                return decimal.Parse(registry.Entries.First().Last, CultureInfo.InvariantCulture);
             }
 
             return null;

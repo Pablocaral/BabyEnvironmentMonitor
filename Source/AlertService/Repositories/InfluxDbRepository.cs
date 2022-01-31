@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Linq;
 using AdysTech.InfluxDB.Client.Net;
 using Microsoft.Extensions.Configuration;
@@ -35,7 +36,7 @@ namespace Com.AlertService.Repositories
             
             if(item != default && item.HasEntries)
             {
-                return float.Parse(item.Entries.First().Last);
+                return float.Parse(item.Entries.First().Last, CultureInfo.InstalledUICulture);
             }
 
             return default;
