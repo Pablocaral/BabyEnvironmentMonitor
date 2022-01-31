@@ -7,5 +7,8 @@ You can build and publish the service, and create a docker image using the follo
     ./deploy.sh
     ./Infrastructure/deploy.sh
 ```
-
+IMPORTANTE!!!! #############################################################################################################
 Dentro de cada directorio de los servicios, se cuenta con un README que específica como poder lanzar a "mano" los servicios.
+
+Repositorio:
+https://github.com/Pablocaral/BabyEnvironmentMonitor
