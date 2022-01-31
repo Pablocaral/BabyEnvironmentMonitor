@@ -10,6 +10,7 @@ namespace Com.AlertService.Repositories
         
         private string DatabaseName {get; set;}
         private string Measurement {get; set;}
+        private string TopicBaseName {get; set;}
         
         public InfluxDbRepository(IConfiguration configuration)
         {
@@ -21,42 +22,23 @@ namespace Com.AlertService.Repositories
             
             Measurement = configuration.GetValue<string>("InlfuxDB:Measurement");
             DatabaseName = configuration.GetValue<string>("InlfuxDB:DatabaseName");
+
+            TopicBaseName = "esi/prototype/";
         }
 
-        public EnvironmentDataModel GetLastEnvironmentState()
+        public float? GetLastSensorValue(string sensor)
         {
-            var task = client.QueryMultiSeriesAsync(DatabaseName, $"SELECT LAST(*) FROM {Measurement}");
+            var task = client.QueryMultiSeriesAsync(DatabaseName, $"SELECT LAST(value) FROM {Measurement} " + 
+                $" where topic='{TopicBaseName}{sensor}'");
             task.Wait();
             var item = task.Result.FirstOrDefault();
             
             if(item != default && item.HasEntries)
             {
-                return BuildEnvironmentDataModel(item.Entries.First());                
+                return float.Parse(item.Entries.First().Last);
             }
 
             return default;
-        }
-
-        private EnvironmentDataModel BuildEnvironmentDataModel(dynamic entry)
-        {
-            var result = new EnvironmentDataModel();
-            
-            if(entry.Last_co2 != null)
-                result.Co2 = float.Parse(entry.Last_co2);
-
-            if(entry.Last_humidity != null)
-                result.Humidity = float.Parse(entry.Last_humidity);
-
-            if(entry.Last_light != null)
-                result.Light = float.Parse(entry.Last_light);
-
-            if(entry.Last_temperature != null)
-                result.Temperature = float.Parse(entry.Last_temperature);
-
-            if(entry.Last_noise != null)
-                result.Noise = float.Parse(entry.Last_noise);
-
-            return result;
         }
     }
 }

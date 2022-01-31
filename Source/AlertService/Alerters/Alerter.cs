@@ -45,69 +45,70 @@ namespace Com.AlertService.Alerters
             {
                 while(!cancellationToken.IsCancellationRequested)
                 {
-                    var environmentDataModel = influxDbRepository.GetLastEnvironmentState();
-                    if(environmentDataModel != default)
-                    {
-                        CheckAndNotifyCo2(environmentDataModel);
-                        CheckAndNotifyLight(environmentDataModel);
-                        CheckAndNotifyTemperature(environmentDataModel);
-                        CheckAndNotifyNoise(environmentDataModel);
-                        CheckAndNotifyHumidity(environmentDataModel);
-                    }
+                    CheckAndNotifyCo2();
+                    CheckAndNotifyLight();
+                    CheckAndNotifyTemperature();
+                    CheckAndNotifyNoise();
+                    CheckAndNotifyHumidity();
 
                     Thread.Sleep(configuration.GetValue<int>("AlertersDelayMs"));
                 }
             });
         }
 
-        private void CheckAndNotifyCo2(EnvironmentDataModel environmentDataModel)
+        private void CheckAndNotifyCo2()
         {
-            if(environmentDataModel.Co2.HasValue)
+            var lastCo2 = influxDbRepository.GetLastSensorValue("co2");
+            if(lastCo2.HasValue)
             {
-                if(co2AlertHelper.IsOutOfHighAlertRange(environmentDataModel.Co2.Value))
-                    notifier.Notify(environmentDataModel.Co2.Value, "CO2", AlertType.High);
-                else if(co2AlertHelper.IsOutOfMediumAlertRange(environmentDataModel.Co2.Value))
-                    notifier.Notify(environmentDataModel.Co2.Value, "CO2", AlertType.Medium);
+                if(co2AlertHelper.IsOutOfHighAlertRange(lastCo2.Value))
+                    notifier.Notify(lastCo2.Value, "CO2", AlertType.High);
+                else if(co2AlertHelper.IsOutOfMediumAlertRange(lastCo2.Value))
+                    notifier.Notify(lastCo2.Value, "CO2", AlertType.Medium);
             }
         }
-        private void CheckAndNotifyLight(EnvironmentDataModel environmentDataModel)
+        private void CheckAndNotifyLight()
         {
-            if(environmentDataModel.Light.HasValue)
+            var lastLight = influxDbRepository.GetLastSensorValue("light");
+            if(lastLight.HasValue)
             {
-                if(lightAlertHelper.IsOutOfHighAlertRange(environmentDataModel.Light.Value))
-                    notifier.Notify(environmentDataModel.Light.Value, "Light", AlertType.High);
-                else if(lightAlertHelper.IsOutOfMediumAlertRange(environmentDataModel.Light.Value))
-                    notifier.Notify(environmentDataModel.Light.Value, "Light", AlertType.Medium);
+                if(lightAlertHelper.IsOutOfHighAlertRange(lastLight.Value))
+                    notifier.Notify(lastLight.Value, "Light", AlertType.High);
+                else if(lightAlertHelper.IsOutOfMediumAlertRange(lastLight.Value))
+                    notifier.Notify(lastLight.Value, "Light", AlertType.Medium);
             }
         }
-        private void CheckAndNotifyNoise(EnvironmentDataModel environmentDataModel)
+        private void CheckAndNotifyNoise()
         {
-            if(environmentDataModel.Noise.HasValue)
+            var lastNoise = influxDbRepository.GetLastSensorValue("noise");
+            if(lastNoise.HasValue)
             {
-                if(noiseAlertHelper.IsOutOfHighAlertRange(environmentDataModel.Noise.Value))
-                    notifier.Notify(environmentDataModel.Noise.Value, "Noise", AlertType.High);
-                else if(noiseAlertHelper.IsOutOfMediumAlertRange(environmentDataModel.Noise.Value))
-                    notifier.Notify(environmentDataModel.Noise.Value, "Noise", AlertType.Medium);
+                if(noiseAlertHelper.IsOutOfHighAlertRange(lastNoise.Value))
+                    notifier.Notify(lastNoise.Value, "Noise", AlertType.High);
+                else if(noiseAlertHelper.IsOutOfMediumAlertRange(lastNoise.Value))
+                    notifier.Notify(lastNoise.Value, "Noise", AlertType.Medium);
             }
         }
-        private void CheckAndNotifyTemperature(EnvironmentDataModel environmentDataModel)
+        private void CheckAndNotifyTemperature()
         {
-            if(environmentDataModel.Temperature.HasValue)
+            var lastTemperature = influxDbRepository.GetLastSensorValue("temperature");
+            if(lastTemperature.HasValue)
             {
-                if(temperatureAlertHelper.IsOutOfHighAlertRange(environmentDataModel.Temperature.Value))
-                    notifier.Notify(environmentDataModel.Temperature.Value, "Temperature", AlertType.High);
-                else if(temperatureAlertHelper.IsOutOfMediumAlertRange(environmentDataModel.Temperature.Value))
-                    notifier.Notify(environmentDataModel.Temperature.Value, "Temperature", AlertType.Medium);
+                if(temperatureAlertHelper.IsOutOfHighAlertRange(lastTemperature.Value))
+                    notifier.Notify(lastTemperature.Value, "Temperature", AlertType.High);
+                else if(temperatureAlertHelper.IsOutOfMediumAlertRange(lastTemperature.Value))
+                    notifier.Notify(lastTemperature.Value, "Temperature", AlertType.Medium);
             }
         }
-        private void CheckAndNotifyHumidity(EnvironmentDataModel environmentDataModel)
+        private void CheckAndNotifyHumidity()
         {
-            if(environmentDataModel.Humidity.HasValue)
+            var lastHumidity = influxDbRepository.GetLastSensorValue("humidity");
+            if(lastHumidity.HasValue)
             {
-                if(humidityAlertHelper.IsOutOfHighAlertRange(environmentDataModel.Humidity.Value))
-                    notifier.Notify(environmentDataModel.Humidity.Value, "Humidity", AlertType.High);
-                else if(humidityAlertHelper.IsOutOfMediumAlertRange(environmentDataModel.Humidity.Value))
-                    notifier.Notify(environmentDataModel.Humidity.Value, "Humidity", AlertType.Medium);
+                if(humidityAlertHelper.IsOutOfHighAlertRange(lastHumidity.Value))
+                    notifier.Notify(lastHumidity.Value, "Humidity", AlertType.High);
+                else if(humidityAlertHelper.IsOutOfMediumAlertRange(lastHumidity.Value))
+                    notifier.Notify(lastHumidity.Value, "Humidity", AlertType.Medium);
             }
         }
     }
