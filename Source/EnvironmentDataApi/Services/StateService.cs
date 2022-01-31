@@ -15,6 +15,10 @@ namespace Com.EnvironmentDataApi.Services
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);        
         private InfluxDBClient client;
+
+        private string DatabaseName {get; set;}
+        private string Measurement {get; set;}
+        private string TopicBaseName {get; set;}
         
         public StateService(IConfiguration configuration)
         {
@@ -23,13 +27,18 @@ namespace Com.EnvironmentDataApi.Services
             var password = configuration.GetValue<string>("InlfuxDB:Password");
 
             client = new InfluxDBClient(endPoint, user, password);
+
+            Measurement = configuration.GetValue<string>("InlfuxDB:Measurement");
+            DatabaseName = configuration.GetValue<string>("InlfuxDB:DatabaseName");
+
+            TopicBaseName = "esi/prototype/";
         }
 
         public EnvironmentState GetCurrentState(NancyContext context, string environmentUid)
         {
             try
             {
-                return getEnvironmentData(environmentUid).GetAwaiter().GetResult();
+                return GetEnvironmentData(environmentUid);
             }
             catch(Exception ex)
             {
@@ -38,21 +47,34 @@ namespace Com.EnvironmentDataApi.Services
             }
         }
 
-        public async Task<EnvironmentState> getEnvironmentData(String environmentUid)
+        private EnvironmentState GetEnvironmentData(String environmentUid)
         {
-            String petition = "select * from environmentData where environmentId="+environmentUid;
-            var query = await client.QueryMultiSeriesAsync("environmentData", petition); 
-
-            var state = query.ElementAt(query.Count-1).Entries[0];
-            var actualState = new EnvironmentState () {
-                CO2 = Convert.ToDecimal(state.Co2),
-                Humidity = Convert.ToDecimal(state.Humidity),
-                Light = Convert.ToDecimal(state.Light),
-                Noise = Convert.ToDecimal(state.Noise),
-                Temperature = Convert.ToDecimal(state.Temperature)
+            var currentState = new EnvironmentState () {
+                CO2 = LoadLastRegistryValue(environmentUid, "co2"),
+                Humidity = LoadLastRegistryValue(environmentUid, "humidity"),
+                Light = LoadLastRegistryValue(environmentUid, "light"),
+                Noise = LoadLastRegistryValue(environmentUid, "noise"),
+                Temperature = LoadLastRegistryValue(environmentUid, "temperature"),
             };
 
-            return actualState;
+            return currentState;
+        }
+
+        private decimal? LoadLastRegistryValue(string environmentUid, string sensor)
+        {
+            var query = $"select LAST(value) from {Measurement} "
+                +$"where environmentId={environmentUid} and topic='{TopicBaseName}{sensor}'";
+            
+            var task = client.QueryMultiSeriesAsync(DatabaseName, query);
+            task.Wait();
+            
+            var registry = task.Result.FirstOrDefault();
+            if(registry != default  && registry.HasEntries)
+            {
+                return decimal.Parse(registry.Entries.First().Last);
+            }
+
+            return null;
         }
     }
 }
