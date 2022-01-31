@@ -7,6 +7,8 @@ services:
     restart: always
     networks:
       - mybridge
+    ports:
+      - "8086:8086"
     
   Mosquitto:
     image: eclipse-mosquitto:latest
@@ -67,4 +69,3 @@ services:
 networks:
   mybridge:
     driver: bridge
-  
