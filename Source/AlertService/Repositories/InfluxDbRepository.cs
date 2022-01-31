@@ -36,7 +36,7 @@ namespace Com.AlertService.Repositories
             
             if(item != default && item.HasEntries)
             {
-                return float.Parse(item.Entries.First().Last, CultureInfo.InstalledUICulture);
+                return float.Parse(item.Entries.First().Last, CultureInfo.InvariantCulture);
             }
 
             return default;
