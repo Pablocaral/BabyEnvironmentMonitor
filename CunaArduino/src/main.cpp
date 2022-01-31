@@ -22,6 +22,7 @@
 
 //Acceso a la red
 #define TOPIC "esi/prototype"
+#define TOPIC_STATE "esi/state"
 #define TOPIC_NOISE "esi/prototype/noise"
 #define TOPIC_TEMPERATURE "esi/prototype/temperature"
 #define TOPIC_HUMIDITY "esi/prototype/humidity"
@@ -32,8 +33,8 @@
 #define BROKER_IP "192.168.1.40"
 #define BROKER_PORT 2883
 
-const char* ssid = "wlan";
-const char* password =  "password";
+const char* ssid = "myline2";
+const char* password =  "11235813213455MCDXCIIdc";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -212,25 +213,28 @@ void vTaskSend(void* pvParam)
 
       cnt_time = 0;
 
-      jsonData = "{\"environmentId\":"+String(_id)+",\"light\":"+String(val_light)+"}";
+      jsonData = "{\"environmentId\":"+String(_id)+",\"value\":"+String(val_light)+"}";
       client.publish(TOPIC_LIGHT, jsonData.c_str()); 
-
-      jsonData = "{\"environmentId\":"+String(_id)+",\"humidity\":"+String(val_humidity)+"}";
-      client.publish(TOPIC_NOISE, jsonData.c_str()); 
-
-      jsonData = "{\"environmentId\":"+String(_id)+",\"co2\":"+String(val_co2)+"}";
+      delay(100);
+      jsonData = "{\"environmentId\":"+String(_id)+",\"value\":"+String(val_humidity)+"}";
+      client.publish(TOPIC_HUMIDITY, jsonData.c_str()); 
+      delay(100);
+      jsonData = "{\"environmentId\":"+String(_id)+",\"value\":"+String(val_co2)+"}";
       client.publish(TOPIC_CO2, jsonData.c_str()); 
-
+      delay(100);
   }
   if(cnt_time == 0 || cnt_time%5 == 0){
 
-      jsonData = "{\"environmentId\":"+String(_id)+",\"noise\":"+String(val_sound)+"}";
+      jsonData = "{\"environmentId\":"+String(_id)+",\"value\":"+String(val_sound)+"}";
       client.publish(TOPIC_NOISE, jsonData.c_str()); 
-
-      jsonData = "{\"environmentId\":"+String(_id)+",\"temperature\":"+String(val_temperature)+"}";
+      delay(100);
+      jsonData = "{\"environmentId\":"+String(_id)+",\"value\":"+String(val_temperature)+"}";
       client.publish(TOPIC_TEMPERATURE, jsonData.c_str());
-    
+      delay(100);
   }
+  jsonData = "{\"environmentId\":"+String(_id)+",\"state\":OK}";
+      client.publish(TOPIC_STATE, jsonData.c_str());
+      delay(100);
   
   vTaskDelay(2000/portTICK_PERIOD_MS);
   vTaskDelete(NULL);
@@ -287,7 +291,6 @@ void app_main(void)
   xTaskCreatePinnedToCore(vTask5, "Task 5", 20000, NULL, 1, &xTask5Handle,0);
   xTaskCreatePinnedToCore(vTask30, "Task 30", 20000, NULL, 1, &xTask30Handle,0);
   
-
 }
 
 void setup() {
